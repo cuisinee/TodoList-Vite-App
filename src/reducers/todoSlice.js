@@ -48,7 +48,11 @@ const initialState = {
             text: '',
             checked: false,
         }
-    ]
+    ],
+    //fetchAllTodos의 진행 상태: 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: 'idle',
+    //실패 시 에러 메시지 (성공 시 null)
+    error: null,
 };
 
 /*
@@ -68,8 +72,20 @@ const todosSlice = createSlice({
     // extraReducer에 비동기 함수의 pending, fulfilled, rejected를 처리할 내용을 넣어준다!
     extraReducers:(builder) => {
         builder
+            //로딩 시작: 요청 진행 중 상태로 전환하고 이전 에러를 초기화
+            .addCase(fetchAllTodos.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
             .addCase(fetchAllTodos.fulfilled , (state, action) => {
+                state.status = 'succeeded';
+                state.error = null;
                 state.todos = action.payload;
+            })
+            //로딩 실패: 에러 메시지를 보관하여 UI에 표시
+            .addCase(fetchAllTodos.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
             })
             .addCase(removeTodo.fulfilled, (state, action) => {
                 state.todos = action.payload;
