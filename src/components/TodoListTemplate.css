@@ -20,3 +20,12 @@
 .todos-wrapper {
   min-height: 5rem;
 }
+/* fetchAllTodos의 로딩/에러 상태 표시 */
+.todo-status {
+  padding: 1.5rem;
+  text-align: center;
+  color: #868e96;
+}
+.todo-error {
+  color: #e03131;
+}
